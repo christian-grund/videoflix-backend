@@ -8,7 +8,7 @@ from rest_framework.authtoken.models import Token
 
 from auth.register.serializers import UserSerializer
 
-class RegisterViewSet(viewsets.ViewSet):
+class SignUpViewSet(viewsets.ViewSet):
     def create(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
