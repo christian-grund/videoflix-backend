@@ -2,6 +2,9 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, logout
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
 
 from auth.register.serializers import UserSerializer
 
@@ -14,17 +17,30 @@ class RegisterViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
+# 07175f9aed0c9cd5e870cbb2ed0adc4dc774e8cf
 class LoginViewSet(viewsets.ViewSet):
     def create(self, request):
-        username = request.data.get('username')
+        email = request.data.get('email')
         password = request.data.get('password')
 
-        user = authenticate(username=username, password=password)
+        try:
+            # Benutzer anhand der E-Mail finden
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if user:
-            return Response({"message":"Login successful"}, status=status.HTTP_200_OK)
+        # Benutzer authentifizieren
+        user = authenticate(username=user.username, password=password)
+
+        if user is not None:
+            # Token generieren oder abrufen
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                "message": "Login successful",
+                "token": token.key  # Token zurückgeben
+            }, status=status.HTTP_200_OK)
         else:
-            return Response({"message":"Invalid credentials111"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
         
 
 class LogoutViewSet(viewsets.ViewSet):
