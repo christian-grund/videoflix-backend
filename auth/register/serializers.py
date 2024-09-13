@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         email = validated_data['email']
         username = email.split('@')[0]
         
-        return User.objects.create(
+        return User.objects.create_user(
             username = username,
             email = email,
             password = validated_data['password']
