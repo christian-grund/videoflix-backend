@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 
-from auth.register.views import LoginViewSet, LogoutViewSet, SignUpViewSet
+from auth.views import LoginViewSet, LogoutViewSet, SignUpViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
