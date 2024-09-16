@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+# from user.models import CustomUser
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,13 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
-    'users', 
+    'rest_framework.authtoken', 
     'corsheaders',
     'content.apps.ContentConfig',
     'debug_toolbar',
     'django_rq',
     'import_export',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -195,3 +196,5 @@ REST_FRAMEWORK = {
 }
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+AUTH_USER_MODEL = 'user.CustomUser'
