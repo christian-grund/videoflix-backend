@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'content.apps.ContentConfig',
     'debug_toolbar',
     'django_rq',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -175,6 +176,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'static/staticfiles'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -190,3 +193,5 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAuthenticated',
     ),
 }
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
