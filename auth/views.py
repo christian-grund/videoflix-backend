@@ -1,4 +1,5 @@
-
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
@@ -6,6 +7,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from auth.serializers import UserSerializer
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
 
 class SignUpViewSet(viewsets.ViewSet):
     def create(self, request):
@@ -17,7 +23,11 @@ class SignUpViewSet(viewsets.ViewSet):
 
     
 # 07175f9aed0c9cd5e870cbb2ed0adc4dc774e8cf
+# TTL = Total Life Time, Variable aus Settings, kann man auch direkt reinschreiben (z.B. 15 * 60s), Angabe in Sekunden
+# @cache_page(CACHE_TTL) 
 class LoginViewSet(viewsets.ViewSet):
+
+    @method_decorator(cache_page(CACHE_TTL))
     def create(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
