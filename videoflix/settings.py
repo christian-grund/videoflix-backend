@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from decouple import config
+
 # from user.models import CustomUser
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -147,7 +149,8 @@ DATABASES = {
         'USER': 'chris',
         'PASSWORD': '1234', 
         'HOST': 'localhost', 
-        'PORT': '',
+        # 'PORT': '',  
+        'PORT': '5432',  # Der Standard-Port für PostgreSQL
     }
 }
 
@@ -209,3 +212,12 @@ REST_FRAMEWORK = {
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 AUTH_USER_MODEL = 'user.CustomUser'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.office365.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.mail import send_mail
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
@@ -6,20 +7,73 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from auth.serializers import UserSerializer
+from auth.serializers import SimpleSerializer, UserSerializer
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 
+
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+# class SignUpViewSet(viewsets.ViewSet):
+#     def create(self, request):
+#         serializer = SimpleSerializer(data=request.data)
+#         print("Received data:", request.data)
+#         print("Serializer instance:", serializer)
+
+#         if serializer.is_valid():
+#             print("Serializer is valid")
+#             email = serializer.validated_data['email']
+#             password = serializer.validated_data['password']
+#             username = email.split('@')[0]
+
+#             # Benutzer erstellen
+#             user = CustomUser.objects.create_user(
+#                 username=username,
+#                 email=email,
+#                 password=password
+#             )
+#             print("User created:", user)
+
+#             # E-Mail senden
+#             # send_mail(
+#             #     'Willkommen bei unserer Plattform',
+#             #     f'Hallo {user.username},\n\nDanke für deine Registrierung!',
+#             #     settings.DEFAULT_FROM_EMAIL,
+#             #     [user.email],
+#             #     fail_silently=False,
+#             # )
+#             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
+        
+#         print("Serializer errors:", serializer.errors)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class SignUpViewSet(viewsets.ViewSet):
     def create(self, request):
         serializer = UserSerializer(data=request.data)
+        print("Received data:", request.data)
+        print("Serializer instance:", serializer)
+
         if serializer.is_valid():
-            serializer.save()
+            print("Serializer is valid")
+            user = serializer.save()
+            print("User created:", user)
+            
+            # E-Mail senden
+            # send_mail(
+            #     'Willkommen bei unserer Plattform',
+            #     f'Hallo {user.username},\n\nDanke für deine Registrierung!',
+            #     settings.DEFAULT_FROM_EMAIL,
+            #     [user.email],
+            #     fail_silently=False,
+            # )
             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
+        
+        print("Serializer errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     
 # 07175f9aed0c9cd5e870cbb2ed0adc4dc774e8cf
