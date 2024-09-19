@@ -16,11 +16,37 @@ from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from rest_framework.decorators import api_view
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 from user.models import CustomUser
 
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+def send_activation_email(user, token):
+    verification_link = f'http://localhost:4200/activate?key={token.key}'
+    subject = 'Activate your VIDEOFLIX account'
+    
+    # HTML-Inhalt der E-Mail
+    html_content = render_to_string('activation_email.html', {
+        'username': user.username,
+        'verification_link': verification_link,
+    })
+    
+    # E-Mail-Objekt erstellen
+    email = EmailMultiAlternatives(
+        subject,
+        '',  # Textkörper, falls HTML nicht unterstützt wird
+        settings.EMAIL_HOST_USER,
+        ['christian.grund@outlook.de'], # user.email
+    )
+    
+    # HTML-Teil hinzufügen
+    email.attach_alternative(html_content, "text/html")
+    
+    # E-Mail senden
+    email.send(fail_silently=False)
 
 
 class SignUpViewSet(viewsets.ViewSet):
@@ -34,20 +60,7 @@ class SignUpViewSet(viewsets.ViewSet):
             
             token, created = Token.objects.get_or_create(user=user)
             
-            verification_link = f'http://localhost:4200/activate?key={token.key}'
-            subject = 'Activate your VIDEOFLIX account'
-            message = f'Dear {user.username},\n\nThank you for registering for "Videoflix". To complete your registration and verify your email address, please click the link below:\n\n'
-            message += f'{verification_link}\n\n'
-            message += 'If you did not create an account with us, please disregard this email.\n\n'
-            message += 'Best regards\n\n'
-            message += 'Your Videoflix Team.\n\n'
-            send_mail(
-                subject,
-                message,
-                settings.EMAIL_HOST_USER,
-                ['christian.grund@outlook.de'], # [user.email],
-                fail_silently=False,
-            )
+            send_activation_email(user, token)
 
             return Response({"message": "User registered successfully! Please check your email to activate your account"}, status=status.HTTP_201_CREATED)
         

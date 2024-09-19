@@ -115,7 +115,7 @@ ROOT_URLCONF = 'videoflix.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -195,6 +195,11 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'static/staticfiles'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -214,18 +219,6 @@ REST_FRAMEWORK = {
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 AUTH_USER_MODEL = 'user.CustomUser'
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.office365.com'
-# EMAIL_PORT = 465  # 465 Port für SSL , alt: 587
-# EMAIL_USE_TLS = False
-# EMAIL_HOST_USER = 'christian.grund@outlook.de'
-# EMAIL_HOST_PASSWORD = 'pbvzetnerttpixbb'
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

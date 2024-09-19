@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			.center-img {
+				display: flex;
+				width: 100vw;
+				justify-content: center;
+			}
+
+			.center-img img {
+				width: 250px;
+				height: auto;
+				/* align-self: center; */
+			}
+
+			.btn-default {
+				display: inline-block !important;
+				background-color: #2e3edf;
+				color: white;
+				padding: 12px 24px;
+				font-size: 18px;
+				font-weight: 400;
+				border-radius: 40px;
+				border-width: 0;
+				transition: background-color 0.3s ease;
+				width: auto !important;
+				text-decoration: none;
+				margin: 12px 0;
+			}
+
+			.btn-default:hover {
+				cursor: pointer;
+				background-color: #463eff;
+			}
+		</style>
+	</head>
+	<body>
+		{% load static %} {% comment %} <img src="{% static 'img/logo_with_text.png' %}" alt="Logo" /> {% endcomment %}
+		<div class="center-img">
+			<img src="http://localhost:8000/static/img/logo_with_text.svg" alt="Logo" />
+		</div>
+
+		<p>Dear {{ username }},</p>
+
+		<p>thank you for registering for <a href="#">Videoflix</a>. To complete your registration and verify your email address, please click the button below:</p>
+
+		<a href="{{ verification_link }}" class="btn-default">Activate account</a>
+
+		<p>If you did not create an account with us, please disregard this email.<br /></p>
+
+		<p>Best regards,</p>
+
+		<p>Your Videoflix Team</p>
+	</body>
+</html>
