@@ -232,8 +232,12 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465  # Port für SSL
 EMAIL_USE_TLS = False  # TLS deaktivieren
 EMAIL_USE_SSL = True  # SSL verwenden
-EMAIL_HOST_USER = 'grund7@gmail.com'
-EMAIL_HOST_PASSWORD = 'xhlq qrxb aymi pimv'
+print(config('EMAIL_HOST_USER', default='Not Found'))
+print(config('EMAIL_HOST_PASSWORD', default='Not Found'))
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# EMAIL_HOST_USER = 'grund7@gmail.com'
+# EMAIL_HOST_PASSWORD = 'xhlq qrxb aymi pimv'
 
 
 ssl_context = ssl.create_default_context(cafile=certifi.where())
