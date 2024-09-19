@@ -17,6 +17,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from rest_framework.decorators import api_view
 
+from user.models import CustomUser
+
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -27,18 +29,18 @@ class SignUpViewSet(viewsets.ViewSet):
 
         if serializer.is_valid():
             user = serializer.save()
-            user.is_active = False  # Setze den Benutzer als inaktiv
+            user.is_active = False  
             user.save()
             
-           # Token generieren
             token, created = Token.objects.get_or_create(user=user)
             
             verification_link = f'http://localhost:4200/activate?key={token.key}'
-            # current_site = get_current_site(request)
             subject = 'Activate your VIDEOFLIX account'
-            message = f'Hi {user.username},\n\nPlease use the link below to activate your account:\n\n'
+            message = f'Dear {user.username},\n\nThank you for registering for "Videoflix". To complete your registration and verify your email address, please click the link below:\n\n'
             message += f'{verification_link}\n\n'
-            message += 'Thank you!'
+            message += 'If you did not create an account with us, please disregard this email.\n\n'
+            message += 'Best regards\n\n'
+            message += 'Your Videoflix Team.\n\n'
             send_mail(
                 subject,
                 message,
@@ -61,69 +63,40 @@ def ActivateAccountView(request):
         user = Token.objects.get(key=token).user
         user.is_active = True
         user.save()
+        print('ActivateAccount user:', user)
         
         return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
     except Token.DoesNotExist:
         return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
     
 
-class LoginViewSet(viewsets.ViewSet):
-    def create(self, request):
-        token_key = request.query_params.get('key')
-        
-        if token_key:
-            try:
-                token = Token.objects.get(key=token_key)
-                user = token.user
-                # Optional: Token als "verbraucht" markieren
-                # token.delete()
-                
-                # Benutzer authentifizieren (Optional, falls du es benötigst)
-                user = authenticate(username=user.username, password=request.data.get('password'))
-                
-                if user is not None:
-                    return Response({
-                        "message": "Login successful",
-                        "token": token.key
-                    }, status=status.HTTP_200_OK)
-                else:
-                    return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-                
-            except Token.DoesNotExist:
-                return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response({"error": "No token provided"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-    
-# 07175f9aed0c9cd5e870cbb2ed0adc4dc774e8cf
 # TTL = Total Life Time, Variable aus Settings, kann man auch direkt reinschreiben (z.B. 15 * 60s), Angabe in Sekunden
 # @cache_page(CACHE_TTL) 
-# class LoginViewSet(viewsets.ViewSet):
+class LoginViewSet(viewsets.ViewSet):
 
-#     @method_decorator(cache_page(CACHE_TTL))
-#     def create(self, request):
-#         email = request.data.get('email')
-#         password = request.data.get('password')
+    # @method_decorator(cache_page(CACHE_TTL))
+    def create(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
 
-#         try:
-#             # Benutzer anhand der E-Mail finden
-#             user = User.objects.get(email=email)
-#         except User.DoesNotExist:
-#             return Response({"error": "User with this email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            # Benutzer anhand der E-Mail finden
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "User with this email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-#         # Benutzer authentifizieren
-#         user = authenticate(username=user.username, password=password)
+        # Benutzer authentifizieren
+        user = authenticate(username=user.username, password=password)
 
-#         if user is not None:
-#             # Token generieren oder abrufen
-#             token, created = Token.objects.get_or_create(user=user)
-#             return Response({
-#                 "message": "Login successful",
-#                 "token": token.key  # Token zurückgeben
-#             }, status=status.HTTP_200_OK)
-#         else:
-#             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+        if user is not None:
+            # Neuen Token generieren oder bestehenden abrufen
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                "message": "Login successful",
+                "token": token.key  # Neuen Token zurückgeben
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
         
 
 class LogoutViewSet(viewsets.ViewSet):
