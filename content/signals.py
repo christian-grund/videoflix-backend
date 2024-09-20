@@ -1,4 +1,4 @@
-from content.tasks import convert_360p, convert_720p, convert_1080p
+from content.tasks import convert_360p, convert_720p, convert_1080p, convert_video
 
 from .models import VideoItem
 from django.dispatch import receiver
@@ -18,10 +18,9 @@ def video_post_save(sender, instance, created, **kwargs):
     if created:
         print('New video created')
         queue = django_rq.get_queue('default', autocommit=True)
-        queue.enqueue(convert_360p, instance.video_file.path)
-        queue.enqueue(convert_720p, instance.video_file.path)
-        queue.enqueue(convert_1080p, instance.video_file.path)
-
+        queue.enqueue(convert_video, instance.video_file.path, '_360p', 'scale=640:360')
+        queue.enqueue(convert_video, instance.video_file.path, '_720p', 'scale=1280:720')
+        queue.enqueue(convert_video, instance.video_file.path, '_1080p', 'scale=1920:1080')
         
 
 @receiver(post_delete, sender=VideoItem)

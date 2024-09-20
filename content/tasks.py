@@ -1,18 +1,22 @@
 import subprocess
 import os
 
+def convert_video(source, resolution, scale):
+    ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  # Vollständiger Pfad
+    base, ext = os.path.splitext(source)
+    target = base + '{}'.format(resolution) + ext
+    cmd = '{} -i "{}" -vf {} -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, scale, target)
+    subprocess.run(cmd, shell=True)
+
 def convert_360p(source):
-    print('Started converting 360p')
     ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  # Vollständiger Pfad
     base, ext = os.path.splitext(source)
     target = base + '_360p' + ext
-    # cmd = '{} -i "{}" -s hd360 -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, target)
     cmd = '{} -i "{}" -vf "scale=640:360" -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, target)
     subprocess.run(cmd, shell=True)
 
 
 def convert_720p(source):
-    print('Started converting 720p')
     ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  # Vollständiger Pfad
     base, ext = os.path.splitext(source)
     target = base + '_720p' + ext
@@ -21,7 +25,6 @@ def convert_720p(source):
 
 
 def convert_1080p(source):
-    print('Started converting 1080p')
     ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  # Vollständiger Pfad
     base, ext = os.path.splitext(source)
     target = base + '_1080p' + ext
