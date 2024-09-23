@@ -17,10 +17,11 @@ def video_post_save(sender, instance, created, **kwargs):
     print('Video wurde gespeichert.')
     if created:
         print('New video created')
-        # queue = django_rq.get_queue('default', autocommit=True)
-        # queue.enqueue(convert_video, instance.video_file.path, '_360p', 'scale=640:360')
-        # queue.enqueue(convert_video, instance.video_file.path, '_720p', 'scale=1280:720')
-        # queue.enqueue(convert_video, instance.video_file.path, '_1080p', 'scale=1920:1080')
+        queue = django_rq.get_queue('default', autocommit=True)
+        queue.enqueue(convert_video, instance.video_file.path, '_360p', 'scale=640:360')
+        queue.enqueue(convert_video, instance.video_file.path, '_720p', 'scale=1280:720')
+        queue.enqueue(convert_video, instance.video_file.path, '_1080p', 'scale=1920:1080')
+        queue.enqueue(delete_original_video, instance.video_file.path)
         
 
 @receiver(post_delete, sender=VideoItem)
@@ -33,6 +34,12 @@ def video_post_delete(sender, instance, **kwargs):
         if os.path.isfile(instance.video_file.path):
             os.remove(instance.video_file.path)
 
+def delete_original_video(video_path):
+    if os.path.isfile(video_path):
+        os.remove(video_path)
+        print(f'Originalvideo {video_path} wurde gelöscht.')
+
+        
 # pre: davor, post: danach
 # pre_delete und post_delete auch möglich
 # diese Art der Registrierung ist veraltet
