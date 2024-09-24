@@ -8,8 +8,8 @@ class VideoItem(models.Model):
     name = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
-    categories = ArrayField(models.CharField(max_length=50), blank=True, null=True)
-    video_file = models.FileField(upload_to='videos', blank=True, null=True)
+    categories = ArrayField(models.CharField(max_length=50))
+    video_file = models.FileField(upload_to='videos')
 
     def __str__(self):
         return self.title
@@ -17,4 +17,3 @@ class VideoItem(models.Model):
 
 
 
-# categories = models.JSONField(default=list, blank=True, null=True)
