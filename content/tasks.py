@@ -1,5 +1,7 @@
-import subprocess
 import os
+import subprocess
+import textwrap
+
 
 def convert_video(source, resolution, scale):
     ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  # Vollständiger Pfad
@@ -29,25 +31,28 @@ def create_video_screenshot(video_path, output_image_path, time="00:00:05"):
         print(f'Fehler bei der Screenshot-Erstellung: {e}')
 
 
-import subprocess
-import os
-import textwrap
 
-def create_thumbnail_with_text(image_path, video_title, fontsize=150, max_chars_per_line=25):
-    # Funktion, um Text in Abschnitte von 25 Zeichen aufzuteilen
+def delete_original_video(video_path):
+    if os.path.isfile(video_path):
+        os.remove(video_path)
+
+
+def delete_original_screenshot(screenshot_path):
+    if os.path.isfile(screenshot_path):
+        os.remove(screenshot_path)
+
+
+def create_thumbnail_with_text(image_path, video_title, fontsize=145, max_chars_per_line=25):
     def split_text_by_length(text, max_len):
         return '\n'.join(textwrap.wrap(text, max_len))
 
-    # Trenne den Text nach exakt 25 Zeichen
     formatted_text = split_text_by_length(video_title, max_chars_per_line)
 
-    # Dateipfad für das Bild mit Text
     output_image_path_with_text = os.path.splitext(image_path)[0] + '_with_text.jpg'
     print('output_image_path_with_text:', output_image_path_with_text)
     print('formatted_text:', formatted_text)
 
     try:
-        # Y-Position für den Text
         y_position = f"h-(text_h*1.5)"
 
         command = [
