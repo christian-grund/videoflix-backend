@@ -10,7 +10,7 @@ from content.views import VideoItemViewSet
 from content.views import export_videoitems_json
 
 router = DefaultRouter()
-router.register(r'videos', VideoItemViewSet)
+router.register(r'videos', VideoItemViewSet, basename='videoitem')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

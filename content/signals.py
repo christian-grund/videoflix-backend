@@ -2,17 +2,11 @@ from videoflix import settings
 from .models import VideoItem
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+from content.tasks import convert_video, create_thumbnail_with_text, create_video_screenshot, delete_original_screenshot, delete_original_video
+
+import os
 import django_rq
 
-from content.tasks import convert_video, create_thumbnail_with_text, create_video_screenshot, delete_original_screenshot, delete_original_video
-import os
-
-
-
-# sender: von welcher Instanz gesendet wurde
-# instance: die Instanz selber (z.B. Video-Objekt mit Titel, Description, Datei)
-# created: Boolean
-# **kwargs:
 
 @receiver(post_save, sender=VideoItem)
 def video_post_save(sender, instance, created, **kwargs):
@@ -45,7 +39,10 @@ def video_post_delete(sender, instance, **kwargs):
 
 
 
-
+# sender: von welcher Instanz gesendet wurde
+# instance: die Instanz selber (z.B. Video-Objekt mit Titel, Description, Datei)
+# created: Boolean
+# **kwargs:
 # pre: davor, post: danach
 # pre_delete und post_delete auch möglich
 # diese Art der Registrierung ist veraltet
