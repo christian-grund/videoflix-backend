@@ -2,6 +2,4 @@ env/
 db.sqlite3
 .env
 
-
-# Media doch hochladen?
-# media/
+media/

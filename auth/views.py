@@ -4,7 +4,7 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.contrib.auth import authenticate
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
 from auth.serializers import UserSerializer
 from rest_framework.decorators import api_view
@@ -12,6 +12,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.html import strip_tags
+
 
 from user.models import CustomUser
 # from django.contrib.auth.models import User
@@ -80,12 +81,14 @@ def ActivateAccountView(request):
 # TTL = Total Life Time, Variable aus Settings, kann man auch direkt reinschreiben (z.B. 15 * 60s), Angabe in Sekunden
 # @cache_page(CACHE_TTL) 
 class LoginViewSet(viewsets.ViewSet):
-
+    permission_classes = [AllowAny]
+    
     # @method_decorator(cache_page(CACHE_TTL))
     def create(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
-
+        print(f"Email: {email}, Password: {password}")
+        
         try:
             user = CustomUser.objects.get(email=email)
             print(f"User found: {user}")
@@ -95,6 +98,7 @@ class LoginViewSet(viewsets.ViewSet):
 
         user = authenticate(username=user.username, password=password)
         print(f"Authentication result: {user}")
+        print(f"Username: {user.username}")
 
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
@@ -170,3 +174,5 @@ def PasswordResetConfirm(request):
         return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+    
+

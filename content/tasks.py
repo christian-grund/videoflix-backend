@@ -69,6 +69,11 @@ def create_thumbnail_with_text(image_path, video_title, fontsize=145, max_chars_
     return output_image_path_with_text
 
 
+def delete_screenshot_with_text(screenshot_with_text_path):
+    if os.path.isfile(screenshot_with_text_path):
+        os.remove(screenshot_with_text_path)
+
+
 
 
 

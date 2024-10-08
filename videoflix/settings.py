@@ -31,7 +31,9 @@ SECRET_KEY = 'django-insecure-^b-ugi2=(7k2x2g9oiw2m9*#*vlv%uobcpu@o9$))m8ma@4k03
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [  'http://localhost:4200/',
+    'localhost',
+    '127.0.0.1']
 
 
 # Application definition
@@ -64,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'videoflix.middlewares.AddAcceptRangesHeaderMiddleware',
 ]
 
 # CORS_ALLOWED_ORIGINS = [
