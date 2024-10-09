@@ -13,14 +13,10 @@ from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.html import strip_tags
 
-
 from user.models import CustomUser
-# from django.contrib.auth.models import User
 
-
+# TTL = Total Life Time, Variable aus Settings, kann man auch direkt reinschreiben (z.B. 15 * 60s), Angabe in Sekunden
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
-
-
 
 
 class SignUpViewSet(viewsets.ViewSet):
@@ -33,14 +29,12 @@ class SignUpViewSet(viewsets.ViewSet):
             user = serializer.save()
             user.is_active = False  
             user.save()
-            
             token, created = Token.objects.get_or_create(user=user)
             
             send_activation_email(user, token)
 
             return Response({"message": "User registered successfully! Please check your email to activate your account"}, status=status.HTTP_201_CREATED)
         
-        print("Serializer errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -61,7 +55,6 @@ def send_activation_email(user, token):
     )
     
     email.attach_alternative(html_content, "text/html")
-    
     email.send(fail_silently=False)
 
 
@@ -79,12 +72,9 @@ def ActivateAccountView(request):
         return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
     except Token.DoesNotExist:
         return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
-    
 
 
-           
 
-# TTL = Total Life Time, Variable aus Settings, kann man auch direkt reinschreiben (z.B. 15 * 60s), Angabe in Sekunden
 # @cache_page(CACHE_TTL) 
 class LoginViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
@@ -110,7 +100,7 @@ class LoginViewSet(viewsets.ViewSet):
             token, created = Token.objects.get_or_create(user=user)
             return Response({
                 "message": "Login successful",
-                "token": token.key  # Neuen Token zurückgeben
+                "token": token.key  
             }, status=status.HTTP_200_OK)
         else:
             print("Invalid credentials")
@@ -147,13 +137,13 @@ def PasswordResetRequest(request):
         'reset_link': reset_link,
     })
     
-    text_content = strip_tags(html_content)  # Fallback für E-Mail-Clients, die HTML nicht unterstützen
+    text_content = strip_tags(html_content)  
     
     send_mail(
         subject,
         text_content,
         settings.EMAIL_HOST_USER,
-        ['christian.grund@outlook.de'],
+        ['christian.grund@outlook.de'], # user.email
         fail_silently=False,
         html_message=html_content
     )
@@ -183,4 +173,3 @@ def PasswordResetConfirm(request):
     else:
         return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
     
-

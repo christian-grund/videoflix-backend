@@ -11,7 +11,6 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from django.conf import settings
 import os
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,17 +18,14 @@ logger = logging.getLogger(__name__)
 class VideoItemViewSet(viewsets.ModelViewSet):
     queryset = VideoItem.objects.all()
     serializer_class = VideoItemSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # IsAuthenticatedOrReadOnly Authentifizierung nicht erforderlich für lesende Zugriffe
-    # authentication_classes = []
+    permission_classes = [IsAuthenticatedOrReadOnly] 
 
     def get_queryset(self):
         user = self.request.user
 
         if user.is_authenticated:
-            # Benutzer bekommt seine eigenen Videos und die öffentlichen (user=None) Videos angezeigt
             return VideoItem.objects.filter(models.Q(user=user) | models.Q(user__isnull=True))
 
-        # Nicht authentifizierte Benutzer sehen nur öffentliche Videos (user=None)
         return VideoItem.objects.filter(user__isnull=True)
     
     def list(self, request, *args, **kwargs):
@@ -58,12 +54,10 @@ def check_convertion_status(request, video_name):
     video_1080p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_1080p.mp4')
     print(f'Überprüfe konvertierte Videos:: {video_360p_path} {video_720p_path} {video_1080p_path}')
     
-        # Status für jedes Format prüfen
     status_360p = "completed" if os.path.exists(video_360p_path) else "pending"
     status_720p = "completed" if os.path.exists(video_720p_path) else "pending"
     status_1080p = "completed" if os.path.exists(video_1080p_path) else "pending"
 
-    # Alle Status im JSON-Response zurückgeben
     return JsonResponse({
         "360p_status": status_360p,
         "720p_status": status_720p,
@@ -75,5 +69,3 @@ def export_videoitems_json(request):
     video_item_resource = VideoItemResource()
     dataset = video_item_resource.export()
     return JsonResponse(dataset.json, safe=False)
-
-

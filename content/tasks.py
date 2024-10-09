@@ -4,7 +4,7 @@ import textwrap
 
 
 def convert_video(source, resolution, scale):
-    ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  # Vollständiger Pfad
+    ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
     base, ext = os.path.splitext(source)
     target = base + '{}'.format(resolution) + ext
     cmd = '{} -i "{}" -vf {} -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, scale, target)
@@ -13,11 +13,9 @@ def convert_video(source, resolution, scale):
 
 def create_video_screenshot(video_path, output_image_path, time="00:00:05"):
     if not os.path.exists(video_path):
-        print(f"Video-Datei nicht gefunden: {video_path}")
         return 
 
     if os.path.exists(output_image_path):
-        print(f"Screenshot existiers bereits und wird folglich nicht neu erstellt: {output_image_path}")
         return    
 
     try:
@@ -45,10 +43,6 @@ def delete_original_screenshot(screenshot_with_text_path):
     if os.path.isfile(screenshot_with_text_path):
         os.remove(screenshot_with_text_path)
 
-# def delete_original_screenshot(screenshot_with_text_path):
-#     print(f'delete_screenshot_with_text: {screenshot_with_text_path}')
-#     if os.path.isfile(screenshot_with_text_path):
-#         os.remove(screenshot_with_text_path)
 
 def delete_screenshot_with_text(screenshot_with_text_path):
     print(f'delete_screenshot_with_text: {screenshot_with_text_path}')
