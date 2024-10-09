@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
 from auth.serializers import UserSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
@@ -19,6 +19,30 @@ from user.models import CustomUser
 
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+
+
+
+class SignUpViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+
+    def create(self, request):
+        serializer = UserSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.save()
+            user.is_active = False  
+            user.save()
+            
+            token, created = Token.objects.get_or_create(user=user)
+            
+            send_activation_email(user, token)
+
+            return Response({"message": "User registered successfully! Please check your email to activate your account"}, status=status.HTTP_201_CREATED)
+        
+        print("Serializer errors:", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 def send_activation_email(user, token):
     verification_link = f'http://localhost:4200/activate?key={token.key}'
@@ -41,26 +65,8 @@ def send_activation_email(user, token):
     email.send(fail_silently=False)
 
 
-class SignUpViewSet(viewsets.ViewSet):
-    def create(self, request):
-        serializer = UserSerializer(data=request.data)
-
-        if serializer.is_valid():
-            user = serializer.save()
-            user.is_active = False  
-            user.save()
-            
-            token, created = Token.objects.get_or_create(user=user)
-            
-            send_activation_email(user, token)
-
-            return Response({"message": "User registered successfully! Please check your email to activate your account"}, status=status.HTTP_201_CREATED)
-        
-        print("Serializer errors:", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def ActivateAccountView(request):
     token = request.data.get('token')
     
@@ -124,6 +130,7 @@ class LogoutViewSet(viewsets.ViewSet):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def PasswordResetRequest(request):
     email = request.data.get('email')
     try:
@@ -155,6 +162,7 @@ def PasswordResetRequest(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def PasswordResetConfirm(request):
     token = request.data.get('token')
     uid = request.data.get('uid')
