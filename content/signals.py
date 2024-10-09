@@ -24,6 +24,7 @@ def video_pre_save(sender, instance, **kwargs):
             print(f'screenshot_with_text_path: {screenshot_with_text_path}')
 
             queue = django_rq.get_queue('default', autocommit=True)
+            queue.enqueue(create_video_screenshot, instance.video_file.path, screenshot_path)
             queue.enqueue(delete_screenshot_with_text, screenshot_with_text_path)
             queue.enqueue(create_thumbnail_with_text, screenshot_path, instance.title)
 

@@ -12,16 +12,13 @@ def convert_video(source, resolution, scale):
 
 
 def create_video_screenshot(video_path, output_image_path, time="00:00:05"):
-
     if not os.path.exists(video_path):
         print(f"Video-Datei nicht gefunden: {video_path}")
+        return 
+
+    if os.path.exists(output_image_path):
+        print(f"Screenshot existiers bereits und wird folglich nicht neu erstellt: {output_image_path}")
         return    
-    
-    # Überprüfen, ob das Zielbild bereits existiert und es löschen
-    print(f'output_image_path: {output_image_path}')
-    if os.path.isfile(output_image_path):
-        os.remove(output_image_path)
-        print(f'Vorhandene Screenshot-Datei gelöscht: {output_image_path}')
 
     try:
         command = [
