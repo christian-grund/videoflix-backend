@@ -44,7 +44,6 @@ class VideoItemViewSet(viewsets.ModelViewSet):
 def check_thumbnail_status(request, video_name):
     print('check_thumbnail_status')
     thumbnail_path = os.path.join(settings.MEDIA_ROOT, 'thumbnails', f'{video_name}_with_text.jpg')
-    print(f'Überprüfe Thumbnail-Pfad: {thumbnail_path}')
     
     if os.path.exists(thumbnail_path):
         return JsonResponse({"status": "completed"})

@@ -16,6 +16,12 @@ def create_video_screenshot(video_path, output_image_path, time="00:00:05"):
     if not os.path.exists(video_path):
         print(f"Video-Datei nicht gefunden: {video_path}")
         return    
+    
+    # Überprüfen, ob das Zielbild bereits existiert und es löschen
+    print(f'output_image_path: {output_image_path}')
+    if os.path.isfile(output_image_path):
+        os.remove(output_image_path)
+        print(f'Vorhandene Screenshot-Datei gelöscht: {output_image_path}')
 
     try:
         command = [
@@ -38,19 +44,19 @@ def delete_original_video(video_path):
         os.remove(video_path)
 
 
-# def delete_original_screenshot(screenshot_with_text_path):
-#     if os.path.isfile(screenshot_with_text_path):
-#         os.remove(screenshot_with_text_path)
-
 def delete_original_screenshot(screenshot_with_text_path):
-    print(f'delete_screenshot_with_text: {screenshot_with_text_path}')
     if os.path.isfile(screenshot_with_text_path):
         os.remove(screenshot_with_text_path)
 
-# def delete_screenshot_with_text(screenshot_with_text_path):
+# def delete_original_screenshot(screenshot_with_text_path):
 #     print(f'delete_screenshot_with_text: {screenshot_with_text_path}')
 #     if os.path.isfile(screenshot_with_text_path):
 #         os.remove(screenshot_with_text_path)
+
+def delete_screenshot_with_text(screenshot_with_text_path):
+    print(f'delete_screenshot_with_text: {screenshot_with_text_path}')
+    if os.path.isfile(screenshot_with_text_path):
+        os.remove(screenshot_with_text_path)
 
 
 def create_thumbnail_with_text(image_path, video_title, fontsize=145, max_chars_per_line=25):

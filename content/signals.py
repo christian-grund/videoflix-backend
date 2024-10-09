@@ -3,7 +3,7 @@ from videoflix import settings
 from .models import VideoItem
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save, post_delete
-from content.tasks import convert_video, create_thumbnail_with_text, create_video_screenshot, delete_original_video, delete_original_screenshot
+from content.tasks import convert_video, create_thumbnail_with_text, create_video_screenshot, delete_original_video, delete_original_screenshot, delete_screenshot_with_text
 # , , delete_screenshot_with_text
 
 import os
@@ -24,7 +24,7 @@ def video_pre_save(sender, instance, **kwargs):
             print(f'screenshot_with_text_path: {screenshot_with_text_path}')
 
             queue = django_rq.get_queue('default', autocommit=True)
-            queue.enqueue(delete_original_screenshot, screenshot_with_text_path)
+            queue.enqueue(delete_screenshot_with_text, screenshot_with_text_path)
             queue.enqueue(create_thumbnail_with_text, screenshot_path, instance.title)
 
 
@@ -57,6 +57,7 @@ def video_post_delete(sender, instance, **kwargs):
     if instance.video_file:
         if os.path.isfile(instance.video_file.path):
             os.remove(instance.video_file.path)
+        
 
 
 
