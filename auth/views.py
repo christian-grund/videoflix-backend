@@ -94,7 +94,7 @@ class LoginViewSet(viewsets.ViewSet):
 
         user = authenticate(username=user.username, password=password)
         print(f"Authentication result: {user}")
-        print(f"Username: {user.username}")
+        # print(f"Username: {user.username}")
 
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
@@ -172,4 +172,18 @@ def PasswordResetConfirm(request):
         return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
-    
+
+class UserCheckViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    print('class UserCheckViewSet(viewsets.ViewSet):')
+
+    def list(self, request):
+        print('UserCheckViewSet list() method called')
+        email = request.query_params.get('email')
+        if email:
+            try:
+                user = CustomUser.objects.get(email=email)
+                return Response({"exists": True}, status=status.HTTP_200_OK)
+            except CustomUser.DoesNotExist:
+                return Response({"exists": False}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Email parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
