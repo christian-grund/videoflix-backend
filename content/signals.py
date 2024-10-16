@@ -10,6 +10,11 @@ import django_rq
 
 @receiver(pre_save, sender=VideoItem)
 def video_pre_save(sender, instance, **kwargs):
+    """
+    Signal handler that triggers before saving a VideoItem instance. 
+    If the title has changed, it enqueues tasks to create a video screenshot 
+    and thumbnails with the updated title.
+    """
     if instance.pk:
         old_instance = VideoItem.objects.get(pk=instance.pk)
 
@@ -27,6 +32,12 @@ def video_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=VideoItem)
 def video_post_save(sender, instance, created, **kwargs):
+    """
+    Signal handler that triggers after saving a VideoItem instance. 
+    If the instance is newly created, it enqueues tasks to generate a screenshot, 
+    create thumbnails, convert the video into different resolutions, 
+    and delete the original video file.
+    """
     video_file_name_without_extension = os.path.splitext(os.path.basename(instance.video_file.name))[0]
     thumbnail_directory = os.path.join(settings.MEDIA_ROOT, 'thumbnails')
     screenshot_path = os.path.join(thumbnail_directory, f'{video_file_name_without_extension}.jpg')        

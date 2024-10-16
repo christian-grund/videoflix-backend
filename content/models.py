@@ -6,6 +6,10 @@ from django.contrib.postgres.fields import ArrayField
 from user.models import CustomUser
 
 class VideoItem(models.Model):
+    """
+    Represents a video item with fields for metadata, 
+    file storage, and user association.
+    """
     created_at = models.DateField(default=date.today)
     name = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
@@ -17,7 +21,3 @@ class VideoItem(models.Model):
 
     def __str__(self):
         return self.title
-
-
-
-

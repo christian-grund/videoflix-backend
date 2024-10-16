@@ -16,6 +16,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 class VideoItemViewSet(viewsets.ModelViewSet):
+    """
+    Handles CRUD operations for VideoItem instances, allowing authenticated 
+    users to manage their videos and providing read-only access to others.
+    """
     queryset = VideoItem.objects.all()
     serializer_class = VideoItemSerializer
     permission_classes = [IsAuthenticatedOrReadOnly] 
@@ -38,6 +42,10 @@ class VideoItemViewSet(viewsets.ModelViewSet):
 
 
 def check_thumbnail_status(request, video_name):
+    """
+    Checks if the thumbnail for the specified video exists and returns 
+    its status ('completed' or 'pending').
+    """
     thumbnail_path = os.path.join(settings.MEDIA_ROOT, 'thumbnails', f'{video_name}_with_text.jpg')
     
     if os.path.exists(thumbnail_path):
@@ -47,6 +55,10 @@ def check_thumbnail_status(request, video_name):
     
 
 def check_convertion_status(request, video_name):
+    """
+    Checks the conversion status of a video for 360p, 720p, and 1080p 
+    resolutions and returns their statuses.
+    """
     video_360p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_360p.mp4')
     video_720p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_720p.mp4')
     video_1080p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_1080p.mp4')
@@ -63,6 +75,9 @@ def check_convertion_status(request, video_name):
 
 
 def export_videoitems_json(request):
+    """
+    Exports all VideoItem data as JSON and returns it in the response.
+    """
     video_item_resource = VideoItemResource()
     dataset = video_item_resource.export()
     return JsonResponse(dataset.json, safe=False)

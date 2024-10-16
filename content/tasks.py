@@ -4,6 +4,9 @@ import textwrap
 
 
 def convert_video(source, resolution, scale):
+    """
+    Converts a video file to a specified resolution using FFmpeg.
+    """
     ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
     base, ext = os.path.splitext(source)
     target = base + '{}'.format(resolution) + ext
@@ -12,6 +15,9 @@ def convert_video(source, resolution, scale):
 
 
 def create_video_screenshot(video_path, output_image_path, time="00:00:05"):
+    """
+    Creates a screenshot from a video at a specified time using FFmpeg.
+    """
     if not os.path.exists(video_path):
         return 
 
@@ -34,21 +40,33 @@ def create_video_screenshot(video_path, output_image_path, time="00:00:05"):
 
 
 def delete_original_video(video_path):
+    """
+    Deletes the original video file if it exists.
+    """
     if os.path.isfile(video_path):
         os.remove(video_path)
 
 
 def delete_original_screenshot(screenshot_with_text_path):
+    """
+    Deletes the original screenshot file if it exists.
+    """
     if os.path.isfile(screenshot_with_text_path):
         os.remove(screenshot_with_text_path)
 
 
 def delete_screenshot_with_text(screenshot_with_text_path):
+    """
+    Deletes a screenshot with text overlay if it exists.
+    """
     if os.path.isfile(screenshot_with_text_path):
         os.remove(screenshot_with_text_path)
 
 
 def create_thumbnail_with_text(image_path, video_title, fontsize=145, max_chars_per_line=25):
+    """
+    Creates a thumbnail image from the specified image file, overlaying the video title as text.
+    """
     def split_text_by_length(text, max_len):
         return '\n'.join(textwrap.wrap(text, max_len))
 
@@ -70,16 +88,3 @@ def create_thumbnail_with_text(image_path, video_title, fontsize=145, max_chars_
         print(f'Fehler bei der Erstellung des Thumbnails mit Text: {e}')
 
     return output_image_path_with_text
-
-
-
-
-
-
-
-
-
-
-
-
-
