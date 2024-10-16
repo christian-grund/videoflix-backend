@@ -4,9 +4,12 @@ from user.forms import CustomUserCreationForm
 from user.models import CustomUser
 from django.contrib.auth.admin import UserAdmin
 
-# Register your models here.
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
+    """
+    Admin interface for managing CustomUser instances, 
+    allowing the addition and editing of custom fields.
+    """
     add_form = CustomUserCreationForm
     fieldsets = (    
                 (            
@@ -22,4 +25,3 @@ class CustomUserAdmin(admin.ModelAdmin):
                 ),  
             *UserAdmin.fieldsets  
         )
-    
