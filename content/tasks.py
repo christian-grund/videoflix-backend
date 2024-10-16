@@ -28,7 +28,6 @@ def create_video_screenshot(video_path, output_image_path, time="00:00:05"):
             output_image_path
         ]
         subprocess.run(command, check=True)
-        print(f'Screenshot erstellt: {output_image_path}')
     except subprocess.CalledProcessError as e:
         print(f'Fehler bei der Screenshot-Erstellung: {e}')
 
@@ -45,7 +44,6 @@ def delete_original_screenshot(screenshot_with_text_path):
 
 
 def delete_screenshot_with_text(screenshot_with_text_path):
-    print(f'delete_screenshot_with_text: {screenshot_with_text_path}')
     if os.path.isfile(screenshot_with_text_path):
         os.remove(screenshot_with_text_path)
 
@@ -57,8 +55,6 @@ def create_thumbnail_with_text(image_path, video_title, fontsize=145, max_chars_
     formatted_text = split_text_by_length(video_title, max_chars_per_line)
 
     output_image_path_with_text = os.path.splitext(image_path)[0] + '_with_text.jpg'
-    print('output_image_path_with_text:', output_image_path_with_text)
-    print('formatted_text:', formatted_text)
 
     try:
         y_position = f"h-(text_h*1.5)"
@@ -70,7 +66,6 @@ def create_thumbnail_with_text(image_path, video_title, fontsize=145, max_chars_
             output_image_path_with_text
         ]
         subprocess.run(command, check=True)
-        print(f'Thumbnail mit Text erstellt: {output_image_path_with_text}')
     except subprocess.CalledProcessError as e:
         print(f'Fehler bei der Erstellung des Thumbnails mit Text: {e}')
 

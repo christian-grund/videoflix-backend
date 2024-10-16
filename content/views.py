@@ -38,7 +38,6 @@ class VideoItemViewSet(viewsets.ModelViewSet):
 
 
 def check_thumbnail_status(request, video_name):
-    print('check_thumbnail_status')
     thumbnail_path = os.path.join(settings.MEDIA_ROOT, 'thumbnails', f'{video_name}_with_text.jpg')
     
     if os.path.exists(thumbnail_path):
@@ -48,11 +47,9 @@ def check_thumbnail_status(request, video_name):
     
 
 def check_convertion_status(request, video_name):
-    print('check_convertion_status')
     video_360p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_360p.mp4')
     video_720p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_720p.mp4')
     video_1080p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_1080p.mp4')
-    print(f'Überprüfe konvertierte Videos:: {video_360p_path} {video_720p_path} {video_1080p_path}')
     
     status_360p = "completed" if os.path.exists(video_360p_path) else "pending"
     status_720p = "completed" if os.path.exists(video_720p_path) else "pending"

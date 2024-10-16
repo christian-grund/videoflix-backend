@@ -15,11 +15,12 @@ from django.utils.html import strip_tags
 
 from user.models import CustomUser
 
-# TTL = Total Life Time, Variable aus Settings, kann man auch direkt reinschreiben (z.B. 15 * 60s), Angabe in Sekunden
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
-
 class SignUpViewSet(viewsets.ViewSet):
+    """
+    Handles user registration, validates input, and sends an activation email.
+    """
     permission_classes = [AllowAny]
 
     def create(self, request):
@@ -30,15 +31,17 @@ class SignUpViewSet(viewsets.ViewSet):
             user.is_active = False  
             user.save()
             token, created = Token.objects.get_or_create(user=user)
-            
             send_activation_email(user, token)
 
             return Response({"message": "User registered successfully! Please check your email to activate your account"}, status=status.HTTP_201_CREATED)
-        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
-
+# nicht in Views!
 def send_activation_email(user, token):
+    """
+    Sends an account activation email to the user with a verification link.
+    """
     verification_link = f'http://localhost:4200/activate?key={token.key}'
     subject = 'Activate your VIDEOFLIX account'
     
@@ -61,40 +64,39 @@ def send_activation_email(user, token):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def ActivateAccountView(request):
+    """
+    Activates the user account associated with the provided token.
+    """
     token = request.data.get('token')
     
     try:
         user = Token.objects.get(key=token).user
         user.is_active = True
         user.save()
-        print('ActivateAccount user:', user)
         
         return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
     except Token.DoesNotExist:
         return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 # @cache_page(CACHE_TTL) 
 class LoginViewSet(viewsets.ViewSet):
+    """
+    Handles user login and generates a token for authenticated users.
+    """
     permission_classes = [AllowAny]
     
     # @method_decorator(cache_page(CACHE_TTL))
     def create(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
-        print(f"Email: {email}, Password: {password}")
         
         try:
             user = CustomUser.objects.get(email=email)
-            print(f"User found: {user}")
         except CustomUser.DoesNotExist:
-            print(f"No user found with email: {email}")
             return Response({"error": "User with this email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(username=user.username, password=password)
-        print(f"Authentication result: {user}")
-        # print(f"Username: {user.username}")
 
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
@@ -103,15 +105,16 @@ class LoginViewSet(viewsets.ViewSet):
                 "token": token.key  
             }, status=status.HTTP_200_OK)
         else:
-            print("Invalid credentials")
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
         
 
 class LogoutViewSet(viewsets.ViewSet):
+    """
+    Logs out the authenticated user by deleting their auth token.
+    """
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
-        # Token des Benutzers löschen
         try:
             request.user.auth_token.delete()
             return Response({"message": "Logout successful!"}, status=status.HTTP_200_OK)
@@ -122,6 +125,9 @@ class LogoutViewSet(viewsets.ViewSet):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def PasswordResetRequest(request):
+    """
+    Sends a password reset link to the user's email if it exists.
+    """
     email = request.data.get('email')
     try:
         user = CustomUser.objects.get(email=email)
@@ -154,10 +160,12 @@ def PasswordResetRequest(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def PasswordResetConfirm(request):
+    """
+    Resets the user's password if the provided token is valid.
+    """
     token = request.data.get('token')
     uid = request.data.get('uid')
     new_password = request.data.get('new_password')
-    print('new_password:', new_password)
 
     try:
         user = CustomUser.objects.get(pk=uid)
@@ -167,18 +175,18 @@ def PasswordResetConfirm(request):
     if default_token_generator.check_token(user, token):
         user.set_password(new_password)
         user.save()
-        print('user:', user)
-        print('user.password:', user.password)
         return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class UserCheckViewSet(viewsets.ViewSet):
+    """
+    Checks if a user with the specified email address exists.
+    """
     permission_classes = [AllowAny]
-    print('class UserCheckViewSet(viewsets.ViewSet):')
 
     def list(self, request):
-        print('UserCheckViewSet list() method called')
         email = request.query_params.get('email')
         if email:
             try:
