@@ -144,7 +144,15 @@ DATABASES = {
         'HOST': 'localhost', 
         # 'PORT': '',  
         'PORT': '5432',  # Der Standard-Port für PostgreSQL
-    }
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'test_videoflix',
+        'USER': 'dein_benutzername',
+        'PASSWORD': 'dein_passwort',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
 }
 
 
