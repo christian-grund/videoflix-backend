@@ -18,5 +18,6 @@ class VideoItemSerializer(serializers.ModelSerializer):
         """
         validated_data['user'] = self.context['request'].user if self.context['request'].user.is_authenticated else None
         return super().create(validated_data)
+
     
     

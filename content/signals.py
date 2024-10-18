@@ -50,6 +50,7 @@ def video_post_save(sender, instance, created, **kwargs):
         queue.enqueue(convert_video, instance.video_file.path, '_720p', 'scale=1280:720')
         queue.enqueue(convert_video, instance.video_file.path, '_1080p', 'scale=1920:1080')
         queue.enqueue(delete_original_video, instance.video_file.path)
+    
         
 
 @receiver(post_delete, sender=VideoItem)

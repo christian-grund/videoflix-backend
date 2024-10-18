@@ -7,6 +7,9 @@ def convert_video(source, resolution, scale):
     """
     Converts a video file to a specified resolution using FFmpeg.
     """
+    if not os.path.exists(source):
+        raise FileNotFoundError(f"Source file '{source}' does not exist.")
+    
     ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
     base, ext = os.path.splitext(source)
     target = base + '{}'.format(resolution) + ext
