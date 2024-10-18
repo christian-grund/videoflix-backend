@@ -21,7 +21,6 @@ class UserSerializerTest(APITestCase):
         self.assertEqual(user.username, 'testuser')
 
     def test_email_uniqueness_validation(self):
-        # Erstelle einen Benutzer mit der gleichen E-Mail
         CustomUser.objects.create_user(
             username='existinguser',
             email=self.valid_data['email'],
@@ -42,14 +41,12 @@ class UserSerializerTest(APITestCase):
         self.assertTrue(serializer.is_valid())
         
     def test_validate_email_when_email_exists(self):
-        # Erstelle einen Benutzer mit einer E-Mail
         CustomUser.objects.create_user(
             username='existinguser',
             email='existinguser@example.com',
             password='password123'
         )
         
-        # Verwende eine andere E-Mail, die noch nicht existiert
         valid_data = {
             'email': 'newuser@example.com',
             'password': 'password123'
@@ -57,7 +54,6 @@ class UserSerializerTest(APITestCase):
         serializer = UserSerializer(data=valid_data)
         self.assertTrue(serializer.is_valid())
 
-        # Verwende die existierende E-Mail
         invalid_data = {
             'email': 'existinguser@example.com',
             'password': 'password123'

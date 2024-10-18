@@ -23,7 +23,6 @@ class AccountActivationTokenGeneratorTest(TestCase):
 
 
     def test_token_invalid_for_different_user(self):
-        # Erstelle einen zweiten Benutzer
         another_user = User.objects.create_user(
             username='anotheruser',
             email='anotheruser@example.com',
@@ -32,7 +31,6 @@ class AccountActivationTokenGeneratorTest(TestCase):
 
         token = self.token_generator.make_token(self.user)
 
-        # Überprüfe, dass das Token nicht für einen anderen Benutzer gültig ist
         self.assertFalse(self.token_generator.check_token(another_user, token))
 
 
