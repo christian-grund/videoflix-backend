@@ -27,7 +27,8 @@ ALLOWED_HOSTS = [
     'http://localhost:4200/',
     'localhost',
     '127.0.0.1',
-    '34.159.98.222'
+    '34.159.98.222',
+    'videoflix-backend.christian-grund.dev'
     ]
 
 
