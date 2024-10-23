@@ -6,6 +6,7 @@ from auth.views import ActivateAccountView, LoginViewSet, LogoutViewSet, Passwor
 from debug_toolbar.toolbar import debug_toolbar_urls
 from rest_framework.routers import DefaultRouter
 from content.views import VideoItemViewSet, check_convertion_status, check_thumbnail_status
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from content.views import export_videoitems_json
 
@@ -27,4 +28,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('django-rq/', include('django_rq.urls')),
 
-] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + debug_toolbar_urls()
+] + staticfiles_urlpatterns() + debug_toolbar_urls()
+# + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
