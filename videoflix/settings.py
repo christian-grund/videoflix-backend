@@ -67,8 +67,8 @@ MIDDLEWARE = [
 # CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "https://videoflix.christian-grund.dev",  # Deine Frontend-URL
-    "http://localhost:4200",  # Optional, falls du lokal entwickelst
+    "https://videoflix.christian-grund.dev",
+    "http://localhost:4200",  # Lokale Entwicklung
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -198,7 +198,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # STATIC_ROOT = BASE_DIR / 'static/staticfiles'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
