@@ -12,6 +12,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.html import strip_tags
+from django.http import JsonResponse
 
 from user.models import CustomUser
 
@@ -33,8 +34,8 @@ class SignUpViewSet(viewsets.ViewSet):
             token, created = Token.objects.get_or_create(user=user)
             send_activation_email(user, token)
 
-            return Response({"message": "User registered successfully! Please check your email to activate your account"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({"message": "User registered successfully! Please check your email to activate your account"}, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 # nicht in Views!
