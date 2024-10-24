@@ -64,8 +64,12 @@ MIDDLEWARE = [
     'videoflix.middlewares.AddAcceptRangesHeaderMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
+CORS_ALLOWED_ORIGINS = [
+    "https://videoflix.christian-grund.dev",  # Deine Frontend-URL
+    "http://localhost:4200",  # Optional, falls du lokal entwickelst
+]
 
 CACHE_TTL = 60 * 15 
 
