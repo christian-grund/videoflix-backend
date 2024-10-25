@@ -18,6 +18,9 @@ from user.models import CustomUser
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
+def some_view(request):
+    raise Exception("This is a test exception to verify logging.")
+
 class SignUpViewSet(viewsets.ViewSet):
     """
     Handles user registration, validates input, and sends an activation email.
