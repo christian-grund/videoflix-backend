@@ -10,7 +10,8 @@ def convert_video(source, resolution, scale):
     if not os.path.exists(source):
         raise FileNotFoundError(f"Source file '{source}' does not exist.")
     
-    ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
+    # ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
+    ffmpeg_path = '/usr/bin/ffmpeg'  
     base, ext = os.path.splitext(source)
     target = base + '{}'.format(resolution) + ext
     cmd = '{} -i "{}" -vf {} -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, scale, target)

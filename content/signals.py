@@ -44,12 +44,22 @@ def video_post_save(sender, instance, created, **kwargs):
 
     if created:
         queue = django_rq.get_queue('default', autocommit=True)
-        queue.enqueue(create_video_screenshot, instance.video_file.path, screenshot_path)
-        queue.enqueue(create_thumbnail_with_text, screenshot_path, instance.title)
-        queue.enqueue(convert_video, instance.video_file.path, '_360p', 'scale=640:360')
-        queue.enqueue(convert_video, instance.video_file.path, '_720p', 'scale=1280:720')
-        queue.enqueue(convert_video, instance.video_file.path, '_1080p', 'scale=1920:1080')
-        queue.enqueue(delete_original_video, instance.video_file.path)
+        video_file_path = instance.video_file.path
+        if os.path.exists(video_file_path):
+            print("Video-Datei existiert:", video_file_path)
+
+            try:
+                queue.enqueue(create_video_screenshot, instance.video_file.path, screenshot_path)
+                queue.enqueue(create_thumbnail_with_text, screenshot_path, instance.title)
+                queue.enqueue(convert_video, instance.video_file.path, '_360p', 'scale=640:360')
+                queue.enqueue(convert_video, instance.video_file.path, '_720p', 'scale=1280:720')
+                queue.enqueue(convert_video, instance.video_file.path, '_1080p', 'scale=1920:1080')
+                queue.enqueue(delete_original_video, instance.video_file.path)
+            except Exception as e:
+                print(f"Fehler beim Enqueueing: {e}")
+        
+        else:
+            print("Video-Datei existiert nicht:", video_file_path)
     
         
 
