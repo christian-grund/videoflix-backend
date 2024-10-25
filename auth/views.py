@@ -43,7 +43,7 @@ def send_activation_email(user, token):
     """
     Sends an account activation email to the user with a verification link.
     """
-    verification_link = f'http://localhost:4200/activate?key={token.key}'
+    verification_link = f'https://videoflix.christian-grund.dev/activate?key={token.key}'
     subject = 'Activate your VIDEOFLIX account'
     
     html_content = render_to_string('activation_email.html', {
@@ -136,7 +136,7 @@ def PasswordResetRequest(request):
         return Response({"error": "User with this email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
     token = default_token_generator.make_token(user)
-    reset_link = f'http://localhost:4200/reset-password?token={token}&uid={user.pk}'
+    reset_link = f'https://videoflix.christian-grund.dev/reset-password?token={token}&uid={user.pk}'
     
     subject = 'VIDEOFLIX Password Reset Request'
     html_content = render_to_string('password_reset_email.html', {
