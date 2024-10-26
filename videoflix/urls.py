@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
-from auth.views import ActivateAccountView, LoginViewSet, LogoutViewSet, PasswordResetConfirm, PasswordResetRequest, SignUpViewSet, UserCheckViewSet, trigger_error
+from auth.views import ActivateAccountView, LoginViewSet, LogoutViewSet, PasswordResetConfirm, PasswordResetRequest, SignUpViewSet, UserCheckViewSet
 from debug_toolbar.toolbar import debug_toolbar_urls
 from rest_framework.routers import DefaultRouter
 from content.views import VideoItemViewSet, check_convertion_status, check_thumbnail_status
