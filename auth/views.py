@@ -19,14 +19,6 @@ from user.models import CustomUser
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
-def trigger_error(request):
-    # Erzwinge einen Fehler, um das Logging zu testen
-    division_by_zero = 1 / 0
-    return HttpResponse("This will not be reached")
-
-def some_view(request):
-    # Löschen
-    raise Exception("This is a test exception to verify logging.")
 
 class SignUpViewSet(viewsets.ViewSet):
     """

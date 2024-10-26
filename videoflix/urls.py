@@ -27,6 +27,6 @@ urlpatterns = [
     path('export-videoitems-json/', export_videoitems_json, name='export_videoitems_json'),
     path('api/', include(router.urls)),
     path('django-rq/', include('django_rq.urls')),
-    path('trigger-error/', trigger_error),
+    
 
 ] + staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + debug_toolbar_urls()
