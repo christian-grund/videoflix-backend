@@ -272,3 +272,22 @@ ssl_context = ssl.create_default_context(cafile=certifi.where())
 #     },
 # }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',  # Ändere dies in 'DEBUG', um detailliertere Ausgaben zu erhalten
+        },
+        '__main__': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Verwende DEBUG für deine eigenen Module
+        },
+    },
+}

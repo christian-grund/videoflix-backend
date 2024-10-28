@@ -115,14 +115,17 @@ class LogoutViewSet(viewsets.ViewSet):
     """
     Logs out the authenticated user by deleting their auth token.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated] 
 
     def create(self, request):
-        try:
-            request.user.auth_token.delete()
-            return Response({"message": "Logout successful!"}, status=status.HTTP_200_OK)
-        except Token.DoesNotExist:
-            return Response({"error": "User is not logged in."}, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            try:
+                request.user.auth_token.delete()
+                return Response({"message": "Logout successful!"}, status=status.HTTP_200_OK)
+            except Token.DoesNotExist:
+                return Response({"error": "User is not logged in."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])

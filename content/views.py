@@ -8,6 +8,7 @@ from content.serializers import VideoItemSerializer
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.conf import settings
 import os
@@ -39,6 +40,32 @@ class VideoItemViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        video_name = instance.name  # Name des Videos
+        
+        # Lösche das Video aus der Datenbank
+        self.perform_destroy(instance)
+
+        # Erstelle die Dateinamen für die Mediendateien
+        video_files = [
+            os.path.join(settings.MEDIA_ROOT, 'videos', f"{video_name}_360p.mp4"),
+            os.path.join(settings.MEDIA_ROOT, 'videos', f"{video_name}_720p.mp4"),
+            os.path.join(settings.MEDIA_ROOT, 'videos', f"{video_name}_1080p.mp4"),
+            os.path.join(settings.MEDIA_ROOT, 'thumbnails', f"{video_name}.jpg"),
+            os.path.join(settings.MEDIA_ROOT, 'thumbnails', f"{video_name}_with_text.jpg")
+        ]
+
+        # Lösche die Dateien vom Server
+        for file_path in video_files:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"{file_path} wurde gelöscht.")  # Debug-Ausgabe
+            else:
+                print(f"{file_path} nicht gefunden.")  # Debug-Ausgabe
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def check_thumbnail_status(request, video_name):
@@ -73,6 +100,40 @@ def check_convertion_status(request, video_name):
         "1080p_status": status_1080p
     })
  
+
+# @api_view(['DELETE'])
+# def delete_video_and_files(request, video_id):
+#     logger.info(f"Anfrage zum Löschen des Videos mit ID: {video_id}")
+#     try:
+#         video = VideoItem.objects.get(id=video_id)
+#         video_name = video.title  # Video-Titel für Dateinamen
+#         logger.info(f"Lösche Video: {video_name}")
+
+#         # Dateinamen basierend auf dem Titel generieren
+#         file_names = [
+#             os.path.join(settings.MEDIA_ROOT, f"{video_name}_360p.mp4"),
+#             os.path.join(settings.MEDIA_ROOT, f"{video_name}_720p.mp4"),
+#             os.path.join(settings.MEDIA_ROOT, f"{video_name}_1080p.mp4"),
+#             os.path.join(settings.MEDIA_ROOT, f"{video_name}.jpg"),
+#             os.path.join(settings.MEDIA_ROOT, f"{video_name}_with_text.jpg"),
+#         ]
+
+#         # Dateien löschen
+#         for file_name in file_names:
+#             if os.path.isfile(file_name):
+#                 os.remove(file_name)
+#                 logger.info(f"Datei gelöscht: {file_name}")
+
+#         # Video aus der Datenbank löschen
+#         video.delete()
+#         logger.info("Video erfolgreich gelöscht.")
+#         return Response(status=status.HTTP_204_NO_CONTENT)  # No Content
+#     except VideoItem.DoesNotExist:
+#         logger.error(f"Video mit ID {video_id} nicht gefunden.")
+#         return Response(status=status.HTTP_404_NOT_FOUND)  # Not Found
+#     except Exception as e:
+#         logger.error(f"Fehler beim Löschen des Videos: {str(e)}")
+#         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)  # Internal Server Error
 
 
 def export_videoitems_json(request):
