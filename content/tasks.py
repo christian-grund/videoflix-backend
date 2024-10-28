@@ -1,6 +1,9 @@
 import os
 import subprocess
 import textwrap
+import shutil
+
+from videoflix import settings
 
 
 def convert_video(source, resolution, scale):
@@ -10,12 +13,25 @@ def convert_video(source, resolution, scale):
     if not os.path.exists(source):
         raise FileNotFoundError(f"Source file '{source}' does not exist.")
     
-    # ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
-    ffmpeg_path = '/usr/bin/ffmpeg'  
+    ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
+    # ffmpeg_path = '/usr/bin/ffmpeg'  
     base, ext = os.path.splitext(source)
-    target = base + '{}'.format(resolution) + ext
-    cmd = '{} -i "{}" -vf {} -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, scale, target)
+
+    temp_target = os.path.join(settings.MEDIA_ROOT, 'temp_videos', f"{os.path.basename(base)}_{resolution}{ext}")
+    final_target = os.path.join(settings.MEDIA_ROOT, 'videos', f"{os.path.basename(base)}_{resolution}{ext}")
+    
+    # Ensure temp_videos directory exists
+    os.makedirs(os.path.dirname(temp_target), exist_ok=True)
+    
+    cmd = '{} -i "{}" -vf {} -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, scale, temp_target)
     subprocess.run(cmd, shell=True)
+
+    # Move the file to the final directory once conversion is done
+    shutil.move(temp_target, final_target)
+
+    # target = base + '{}'.format(resolution) + ext
+    # cmd = '{} -i "{}" -vf {} -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, scale, target)
+    # subprocess.run(cmd, shell=True)
 
 
 def create_video_screenshot(video_path, output_image_path, time="00:00:05"):

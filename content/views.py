@@ -56,8 +56,8 @@ def check_thumbnail_status(request, video_name):
 
 def check_convertion_status(request, video_name):
     """
-    Checks the conversion status of a video for 360p, 720p, and 1080p 
-    resolutions and returns their statuses.
+    Checks the conversion status of a video for 360p, 720p, and 1080p resolutions 
+    and returns their statuses.
     """
     video_360p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_360p.mp4')
     video_720p_path = os.path.join(settings.MEDIA_ROOT, 'videos', f'{video_name}_720p.mp4')
@@ -71,7 +71,8 @@ def check_convertion_status(request, video_name):
         "360p_status": status_360p,
         "720p_status": status_720p,
         "1080p_status": status_1080p
-    }) 
+    })
+ 
 
 
 def export_videoitems_json(request):
