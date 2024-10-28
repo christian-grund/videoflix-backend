@@ -13,8 +13,8 @@ def convert_video(source, resolution, scale):
     if not os.path.exists(source):
         raise FileNotFoundError(f"Source file '{source}' does not exist.")
     
-    ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
-    # ffmpeg_path = '/usr/bin/ffmpeg'  
+    # ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
+    ffmpeg_path = '/usr/bin/f(fmpeg'  
     base, ext = os.path.splitext(source)
 
     temp_target = os.path.join(settings.MEDIA_ROOT, 'temp_videos', f"{os.path.basename(base)}_{resolution}{ext}")
