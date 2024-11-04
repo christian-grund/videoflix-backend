@@ -16,7 +16,8 @@ class SignUpViewSetTests(TestCase):
         }
         response = self.client.post(reverse('SignUpView'), data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn("User registered successfully", response.data['message'])
+        response_json = response.json()
+        self.assertIn("User registered successfully", response_json['message'])
 
     def test_signup_invalid_data(self):
         data = {

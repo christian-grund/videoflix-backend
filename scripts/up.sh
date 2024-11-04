@@ -1,9 +1,3 @@
-#!/bin/bash
-
-# Nutzer nach Commit-Nachricht fragen
-# echo "Enter commit message: "
-# read commitMessage
-
 # Git-Befehle ausführen
 git add .
 git commit -m "$*"

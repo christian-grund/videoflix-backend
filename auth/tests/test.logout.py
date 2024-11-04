@@ -18,6 +18,6 @@ class LogoutViewSetTests(TestCase):
         self.assertIn("Logout successful", response.data['message'])
 
     def test_logout_no_token(self):
-        self.client.credentials()  # Remove credentials
+        self.client.credentials()  
         response = self.client.post(reverse('logout'))
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

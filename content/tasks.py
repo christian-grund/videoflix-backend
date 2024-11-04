@@ -13,8 +13,8 @@ def convert_video(source, resolution, scale):
     if not os.path.exists(source):
         raise FileNotFoundError(f"Source file '{source}' does not exist.")
     
-    ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
-    # ffmpeg_path = '/usr/bin/ffmpeg'
+    # ffmpeg_path = '/Users/christian/usr/ffmpeg/ffmpeg'  
+    ffmpeg_path = '/usr/bin/ffmpeg'
     base, ext = os.path.splitext(os.path.basename(source))
     target_base = f"{base}{resolution}"
     
@@ -26,11 +26,6 @@ def convert_video(source, resolution, scale):
     subprocess.run(cmd, shell=True)
 
     shutil.move(temp_target, final_target)
-
-
-
-
-
 
 
 def create_video_screenshot(video_path, output_image_path, time="00:00:05"):

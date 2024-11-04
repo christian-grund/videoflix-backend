@@ -31,4 +31,3 @@ urlpatterns = [
 
 ] + staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + debug_toolbar_urls()
 
-# path('api/videos/test/<int:video_id>/', delete_video_and_files, name='delete_video'),

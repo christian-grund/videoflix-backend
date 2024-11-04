@@ -18,7 +18,7 @@ class ExportVideoItemsJSONTestCase(APITestCase):
             'title': 'Test Video Title',
             'description': 'Test Video Description',
             'categories': ['test', 'video'],
-            'video_file': self.dummy_file,  # Dummy-Datei zuweisen
+            'video_file': self.dummy_file,  
             'has_sound': True,
         }
 

@@ -44,19 +44,18 @@ class VideoItemSignalTestCase(TestCase):
     def test_video_post_save_enqueues_tasks_on_creation(self, mock_get_queue):
         queue = mock_get_queue.return_value
         
-        # Erstelle ein neues VideoItem
-        new_video_item = VideoItem.objects.create(
-            name='New Video',
-            title='New Title',
-            description='New Description',
-            categories=['new', 'video'],
-            video_file='videos/new_test_video.mp4',  # Dummy-Datei oder Pfad
-            has_sound=False,
-        )
+        with patch('os.path.exists', return_value=True):
+            new_video_item = VideoItem.objects.create(
+                name='New Video',
+                title='New Title',
+                description='New Description',
+                categories=['new', 'video'],
+                video_file='videos/new_test_video.mp4', 
+                has_sound=False,
+            )
 
-        # Überprüfe, ob die Aufgaben in die Warteschlange eingereiht wurden
         self.assertTrue(queue.enqueue.called)
-        self.assertEqual(queue.enqueue.call_count, 6)  # 6 Aufgaben sollten hinzugefügt werden
+        self.assertEqual(queue.enqueue.call_count, 6)  
 
 
 

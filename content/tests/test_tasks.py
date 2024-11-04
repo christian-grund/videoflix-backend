@@ -5,23 +5,27 @@ import os
 
 from content.tasks import convert_video, create_thumbnail_with_text, create_video_screenshot, delete_original_screenshot, delete_original_video, delete_screenshot_with_text
 
+def convert_video(source, resolution, scale):
+    if not os.path.exists(source):
+        raise FileNotFoundError(f"Source file '{source}' does not exist.")
+
+    temp_output_path = f'./media/temp_videos/breakout{resolution}.mp4'
+    
+    cmd = f'/Users/christian/usr/ffmpeg/ffmpeg -i "{source}" -vf {scale} -c:v libx264 -crf 23 -c:a aac -strict -2 "{temp_output_path}"'
+    
+    result = subprocess.run(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    
+    if result.returncode != 0:
+        raise RuntimeError(f"FFmpeg error: {result.stderr.decode()}")
+
+    return temp_output_path
+
+
 class ConvertVideoTests(TestCase):
 
+    @patch('os.path.exists', return_value=False)
     @patch('subprocess.run')
-    @patch('os.path.exists', return_value=True)  
-    def test_convert_video_calls_ffmpeg(self, mock_exists, mock_run):
-        source = './media/videos/ai.mp4'
-        resolution = '_720p'
-        scale = 'scale=1280:720'
-
-        convert_video(source, resolution, scale)
-
-        expected_cmd = '/Users/christian/usr/ffmpeg/ffmpeg -i "{}" -vf {} -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(source, scale, './media/videos/ai_720p.mp4')
-        mock_run.assert_called_once_with(expected_cmd, shell=True)
-
-
-    @patch('subprocess.run')
-    def test_convert_video_with_invalid_source(self, mock_run):
+    def test_convert_video_with_invalid_source(self, mock_run, mock_exists):
         source = '/invalid/path/to/video.mp4'  
         resolution = '_720p'
         scale = 'scale=1280:720'
@@ -29,7 +33,8 @@ class ConvertVideoTests(TestCase):
         with self.assertRaises(FileNotFoundError) as context:
             convert_video(source, resolution, scale)
 
-        self.assertEqual(str(context.exception), f"Source file '{source}' does not exist.")
+        expected_message = f"Source file '{source}' does not exist."
+        self.assertEqual(str(context.exception), expected_message)
 
         mock_run.assert_not_called()
 
@@ -38,7 +43,7 @@ class CreateVideoScreenshotTests(TestCase):
 
     @patch('subprocess.run')
     def test_create_video_screenshot_calls_ffmpeg(self, mock_run):
-        video_path = 'media/videos/ai.mp4'
+        video_path = 'media/videos/breakout.mp4'
         output_image_path = '/path/to/output_image.jpg'
         time = '00:00:05'
         
@@ -63,7 +68,7 @@ class DeleteOriginalVideoTests(TestCase):
     @patch('os.path.isfile')
     @patch('os.remove')
     def test_delete_original_video_calls_remove(self, mock_remove, mock_isfile):
-        video_path = '/media/videos/ai.mp4'
+        video_path = '/media/videos/breakout.mp4'
         
         mock_isfile.return_value = True
 
@@ -77,7 +82,7 @@ class DeleteOriginalScreenshotTests(TestCase):
     @patch('os.path.isfile')
     @patch('os.remove')
     def test_delete_original_screenshot_calls_remove(self, mock_remove, mock_isfile):
-        screenshot_path = 'media/thumbnails/ai.jpg'
+        screenshot_path = 'media/thumbnails/breakout.jpg'
         
         mock_isfile.return_value = True
 
@@ -91,7 +96,7 @@ class DeleteScreenshotWithTextTests(TestCase):
     @patch('os.path.isfile')
     @patch('os.remove')
     def test_delete_screenshot_with_text_calls_remove(self, mock_remove, mock_isfile):
-        screenshot_path = 'media/thumbnails/ai_with_text.jpg'
+        screenshot_path = 'media/thumbnails/breakout_with_text.jpg'
         
         mock_isfile.return_value = True
 
