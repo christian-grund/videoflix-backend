@@ -81,14 +81,12 @@ def ActivateAccountView(request):
         return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# @cache_page(CACHE_TTL) 
 class LoginViewSet(viewsets.ViewSet):
     """
     Handles user login and generates a token for authenticated users.
     """
     permission_classes = [AllowAny]
     
-    # @method_decorator(cache_page(CACHE_TTL))
     def create(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
