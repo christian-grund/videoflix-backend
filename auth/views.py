@@ -87,7 +87,6 @@ class LoginViewSet(viewsets.ViewSet):
     """
     permission_classes = [AllowAny]
     
-    @method_decorator(cache_page(CACHE_TTL))
     def create(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
