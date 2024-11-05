@@ -12,7 +12,6 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.html import strip_tags
-from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.http import JsonResponse
 from user.models import CustomUser
