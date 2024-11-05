@@ -57,7 +57,7 @@ def send_activation_email(user, token):
         subject,
         '',  
         settings.EMAIL_HOST_USER,
-        ['user.email'], 
+        [user.email], 
     )
     
     email.attach_alternative(html_content, "text/html")
@@ -155,7 +155,7 @@ def PasswordResetRequest(request):
         subject,
         text_content,
         settings.EMAIL_HOST_USER,
-        ['user.email'], 
+        [user.email], 
         fail_silently=False,
         html_message=html_content
     )
