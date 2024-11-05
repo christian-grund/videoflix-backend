@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
 from auth.serializers import UserSerializer
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, method_decorator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
@@ -87,6 +87,7 @@ class LoginViewSet(viewsets.ViewSet):
     """
     permission_classes = [AllowAny]
     
+    # @method_decorator(cache_page(CACHE_TTL))
     def create(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
