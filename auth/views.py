@@ -7,13 +7,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
 from auth.serializers import UserSerializer
-from rest_framework.decorators import api_view, permission_classes, method_decorator
+from rest_framework.decorators import api_view, permission_classes
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.html import strip_tags
-from django.views.decorators.cache import cache_page
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+
+
 from user.models import CustomUser
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
@@ -80,7 +81,7 @@ def ActivateAccountView(request):
         return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@cache_page(CACHE_TTL) 
+# @cache_page(CACHE_TTL) 
 class LoginViewSet(viewsets.ViewSet):
     """
     Handles user login and generates a token for authenticated users.
