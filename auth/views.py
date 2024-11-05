@@ -7,14 +7,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
 from auth.serializers import UserSerializer
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, method_decorator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.html import strip_tags
-from django.http import JsonResponse, HttpResponse
-
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.http import JsonResponse
 from user.models import CustomUser
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
@@ -40,7 +40,6 @@ class SignUpViewSet(viewsets.ViewSet):
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-# nicht in Views!
 def send_activation_email(user, token):
     """
     Sends an account activation email to the user with a verification link.
@@ -82,14 +81,14 @@ def ActivateAccountView(request):
         return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# @cache_page(CACHE_TTL) 
+@cache_page(CACHE_TTL) 
 class LoginViewSet(viewsets.ViewSet):
     """
     Handles user login and generates a token for authenticated users.
     """
     permission_classes = [AllowAny]
     
-    # @method_decorator(cache_page(CACHE_TTL))
+    @method_decorator(cache_page(CACHE_TTL))
     def create(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
