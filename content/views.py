@@ -9,8 +9,10 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.conf import settings
+from rest_framework import generics
+
 import os
 import logging
 
@@ -64,6 +66,19 @@ class VideoItemViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class VideoDetailView(generics.RetrieveAPIView):
+    queryset = VideoItem.objects.all()
+    serializer_class = VideoItemSerializer
+
+    def get_object(self):
+        videoname = self.kwargs['videoname']
+        try:
+            video_item = VideoItem.objects.get(name=videoname)
+            return video_item
+        except VideoItem.DoesNotExist:
+            raise Http404("Video not found")
+        
 
 def check_thumbnail_status(request, video_name):
     """
