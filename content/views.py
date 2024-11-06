@@ -65,19 +65,6 @@ class VideoItemViewSet(viewsets.ModelViewSet):
                 print(f"{file_path} nicht gefunden.")  
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class VideoDetailView(generics.RetrieveAPIView):
-    queryset = VideoItem.objects.all()
-    serializer_class = VideoItemSerializer
-
-    def get_object(self):
-        videoname = self.kwargs['videoname']
-        try:
-            video_item = VideoItem.objects.get(name=videoname)
-            return video_item
-        except VideoItem.DoesNotExist:
-            raise Http404("Video not found")
         
 
 def check_thumbnail_status(request, video_name):
