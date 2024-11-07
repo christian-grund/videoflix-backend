@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from auth.views import ActivateAccountView, LoginViewSet, LogoutViewSet, PasswordResetConfirm, PasswordResetRequest, SignUpViewSet, UserCheckViewSet
 from debug_toolbar.toolbar import debug_toolbar_urls
 from rest_framework.routers import DefaultRouter
-from content.views import VideoDetailView, VideoItemViewSet, check_convertion_status, check_thumbnail_status
+from content.views import VideoItemViewSet, check_convertion_status, check_thumbnail_status
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from content.views import export_videoitems_json
