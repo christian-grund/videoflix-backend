@@ -73,7 +73,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",  # Lokale Entwicklung
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = False
 
 CACHE_TTL = 60 * 15 
 
