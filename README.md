@@ -24,33 +24,36 @@ Videoflix is a web application that allows users to upload, manage, and save the
 ### Backend
 
 1. Clone the repository:
+
+```bash
    git clone https://github.com/christian-grund/videoflix-backend
    cd videoflix-backend
+```
 
 2. Create and activate a virtual Python environment:
+
+```bash
    python -m venv venv
    source venv/bin/activate # On Windows: venv\Scripts\activate
+```
 
 3. Install the dependencies:
+
+```bash
    pip install -r requirements.txt
+```
 
 4. Configure the database in settings.py and run the migrations:
+
+```bash
    python manage.py migrate
+```
 
 5. Start the server:
+
+```bash
    python manage.py runserver
-
-### Frontend
-
-1. Clone the repository:
-   git clone https://github.com/christian-grund/videoflix-frontend
-   cd videoflix-frontend
-
-2. Install the dependencies:
-   npm install
-
-3. Start the application:
-   ng serve
+```
 
 ## Usage
 
@@ -60,4 +63,7 @@ Videoflix is a web application that allows users to upload, manage, and save the
 ## Testing
 
 To run the tests, navigate to the backend folder and execute the following command:
+
+```bash
 python manage.py test
+```
