@@ -26,11 +26,11 @@ SECRET_KEY = 'django-insecure-^b-ugi2=(7k2x2g9oiw2m9*#*vlv%uobcpu@o9$))m8ma@4k03
 DEBUG = True
 
 ALLOWED_HOSTS = [  
-    'videoflix-backend.christian-grund.dev',
     'http://localhost:4200/',
     'localhost',
     '127.0.0.1',
     '35.246.138.52',
+    'videoflix-backend.christian-grund.dev'
     ]
 
 
@@ -53,8 +53,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
