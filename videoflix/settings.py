@@ -138,8 +138,8 @@ TEMPLATES = [
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/var/www/videoflix-backend/media'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = '/var/www/videoflix-backend/media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 WSGI_APPLICATION = 'videoflix.wsgi.application'
 
@@ -252,48 +252,48 @@ EMAIL_HOST_PASSWORD = 'xhlq qrxb aymi pimv'
 
 ssl_context = ssl.create_default_context(cafile=certifi.where())
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/videoflix-backend/django_error.log',
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
-
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': '{levelname} {asctime} {module} {message}',
+#             'style': '{',
+#         },
+#     },
 #     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
+#         'file': {
+#             'level': 'ERROR',
+#             'class': 'logging.FileHandler',
+#             'filename': '/var/log/videoflix-backend/django_error.log',
+#             'formatter': 'verbose',
 #         },
 #     },
 #     'loggers': {
 #         'django': {
-#             'handlers': ['console'],
-#             'level': 'INFO',  # Ändere dies in 'DEBUG', um detailliertere Ausgaben zu erhalten
-#         },
-#         '__main__': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',  # Verwende DEBUG für deine eigenen Module
+#             'handlers': ['file'],
+#             'level': 'ERROR',
+#             'propagate': True,
 #         },
 #     },
 # }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',  # Ändere dies in 'DEBUG', um detailliertere Ausgaben zu erhalten
+        },
+        '__main__': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Verwende DEBUG für deine eigenen Module
+        },
+    },
+}
