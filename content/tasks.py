@@ -88,6 +88,9 @@ def create_thumbnail_with_text(image_path, video_title, fontsize=145, max_chars_
 
     output_image_path_with_text = os.path.splitext(image_path)[0] + '_with_text.jpg'
 
+    if os.path.isfile(output_image_path_with_text):
+        os.remove(output_image_path_with_text)
+
     try:
         y_position = f"h-(text_h*1.5)"
 
