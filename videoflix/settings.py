@@ -9,20 +9,13 @@ from pathlib import Path
 from decouple import config
 import ssl
 import certifi
-# import logging
-# logging.error("Test error log - if you see this, logging is working")
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-^b-ugi2=(7k2x2g9oiw2m9*#*vlv%uobcpu@o9$))m8ma@4k03'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [  
@@ -33,8 +26,6 @@ ALLOWED_HOSTS = [
     'videoflix-backend.christian-grund.dev'
     ]
 
-
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,21 +57,7 @@ MIDDLEWARE = [
     'videoflix.middlewares.AddAcceptRangesHeaderMiddleware',
 ]
 
-# CORS_ALLOW_ALL_ORIGINS = True
-
-# CORS_ALLOWED_ORIGINS = [
-#     "https://videoflix.christian-grund.dev",
-#     "http://localhost:4200",  # Lokale Entwicklung
-# ]
-
 CORS_ALLOW_CREDENTIALS = True
-# CORS_ALLOW_HEADERS = ['*']
-# CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']
-
-# SECURE_SSL_REDIRECT = False
-
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 
 CACHE_TTL = 60 * 15 
 
@@ -100,23 +77,14 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-# default: standardmäßige Aufgaben
-# with-sentinel: Teil von Redis, womit Sachen besser laufen
 RQ_QUEUES = {
     'default': {
         'HOST': 'localhost',
         'PORT': 6379,
         'DB': 0,
-        # 'USERNAME': 'some-user',
-        # 'PASSWORD': 'foobared',
         'DEFAULT_TIMEOUT': 360,
-        # 'REDIS_CLIENT_KWARGS': {    # Eventual additional Redis connection arguments
-        #     'ssl_cert_reqs': None,
-        # },
     },
 }
-
-# RQ_EXCEPTION_HANDLERS = ['path.to.my.handler'] # If you need custom exception handlers
 
 ROOT_URLCONF = 'videoflix.urls'
 
@@ -139,20 +107,8 @@ TEMPLATES = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/www/videoflix-backend/media'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 WSGI_APPLICATION = 'videoflix.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -174,27 +130,7 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    # },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
+AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = 'en-us'
 
@@ -205,21 +141,14 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
 
-# STATIC_ROOT = BASE_DIR / 'static/staticfiles'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/staticfiles")
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'), 
 ]
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -231,7 +160,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',  # Ensure JSON responses
+        'rest_framework.renderers.JSONRenderer',  
     ),
 }
 
@@ -244,56 +173,36 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465  
 EMAIL_USE_TLS = False  
 EMAIL_USE_SSL = True  
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_HOST_USER = 'grund7@gmail.com'
 EMAIL_HOST_PASSWORD = 'xhlq qrxb aymi pimv'
 
 
 ssl_context = ssl.create_default_context(cafile=certifi.where())
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'verbose': {
-#             'format': '{levelname} {asctime} {module} {message}',
-#             'style': '{',
-#         },
-#     },
-#     'handlers': {
-#         'file': {
-#             'level': 'ERROR',
-#             'class': 'logging.FileHandler',
-#             'filename': '/var/log/videoflix-backend/django_error.log',
-#             'formatter': 'verbose',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'ERROR',
-#             'propagate': True,
-#         },
-#     },
-# }
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/videoflix-backend/django_error.log',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
-            'level': 'INFO',  # Ändere dies in 'DEBUG', um detailliertere Ausgaben zu erhalten
-        },
-        '__main__': {
-            'handlers': ['console'],
-            'level': 'DEBUG',  # Verwende DEBUG für deine eigenen Module
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
         },
     },
 }
+
+
