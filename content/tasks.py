@@ -20,6 +20,11 @@ def convert_video(source, resolution, scale):
     
     temp_target = os.path.join(settings.MEDIA_ROOT, 'temp_videos', f"{target_base}{ext}")
     final_target = os.path.join(settings.MEDIA_ROOT, 'videos', f"{target_base}{ext}")
+
+    if os.path.exists(final_target):
+        raise FileExistsError(f"Target file '{final_target}' already exists and will not be overwritten.")
+
+
     os.makedirs(os.path.dirname(temp_target), exist_ok=True)
     
     cmd = '{} -i "{}" -vf {} -c:v libx264 -crf 23 -c:a aac -strict -2 "{}"'.format(ffmpeg_path, source, scale, temp_target)
