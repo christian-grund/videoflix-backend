@@ -19,10 +19,13 @@ def video_pre_save(sender, instance, **kwargs):
         old_instance = VideoItem.objects.get(pk=instance.pk)
 
         if old_instance.title != instance.title:
-            video_file_name_without_extension = os.path.splitext(os.path.basename(instance.video_file.name))[0]
+            # video_file_name_without_extension = os.path.splitext(os.path.basename(instance.video_file.name))[0]
+            # video_name_without_spaces = instance.name.replace(" ", "_")
             thumbnail_directory = os.path.join(settings.MEDIA_ROOT, 'thumbnails')
-            screenshot_path = os.path.join(thumbnail_directory, f'{video_file_name_without_extension}.jpg')
-            screenshot_with_text_path = os.path.join(thumbnail_directory, f'{video_file_name_without_extension}_with_text.jpg')
+            # screenshot_path = os.path.join(thumbnail_directory, f'{video_file_name_without_extension}.jpg')
+            screenshot_path = os.path.join(thumbnail_directory, f'{instance.name}.jpg')   
+            # screenshot_with_text_path = os.path.join(thumbnail_directory, f'{video_file_name_without_extension}_with_text.jpg')
+            screenshot_with_text_path = os.path.join(thumbnail_directory, f'{instance.name}_with_text.jpg')
 
             queue = django_rq.get_queue('default', autocommit=True)
             queue.enqueue(create_video_screenshot, instance.video_file.path, screenshot_path)
@@ -38,9 +41,11 @@ def video_post_save(sender, instance, created, **kwargs):
     create thumbnails, convert the video into different resolutions, 
     and delete the original video file.
     """
-    video_file_name_without_extension = os.path.splitext(os.path.basename(instance.video_file.name))[0]
+    # video_file_name_without_extension = os.path.splitext(os.path.basename(instance.video_file.name))[0]
+    # video_name_without_spaces = instance.name.replace(" ", "_")
     thumbnail_directory = os.path.join(settings.MEDIA_ROOT, 'thumbnails')
-    screenshot_path = os.path.join(thumbnail_directory, f'{video_file_name_without_extension}.jpg')        
+    # screenshot_path = os.path.join(thumbnail_directory, f'{video_file_name_without_extension}.jpg')        
+    screenshot_path = os.path.join(thumbnail_directory, f'{instance.name}.jpg')        
 
     if created:
         queue = django_rq.get_queue('default', autocommit=True)
