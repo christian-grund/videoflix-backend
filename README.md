@@ -67,3 +67,9 @@ To run the tests, navigate to the backend folder and execute the following comma
 ```bash
 python manage.py test
 ```
+
+## Contact
+
+For inquiries or feedback, reach out to me at mail@christian-grund.dev or create an issue in the repository.
+
+---
