@@ -25,4 +25,5 @@ class CustomUserAdmin(admin.ModelAdmin):
                 ),  
             *UserAdmin.fieldsets  
         )
-    list_display = ('id', 'username', 'email', 'is_staff', 'is_active')
+    list_display = ('id', 'username', 'email', 'date_joined')  # Felder für die Übersicht
+    ordering = ('-date_joined',)
