@@ -25,3 +25,4 @@ class CustomUserAdmin(admin.ModelAdmin):
                 ),  
             *UserAdmin.fieldsets  
         )
+    list_display = ('id', 'username', 'email', 'is_staff', 'is_active')
