@@ -13,8 +13,6 @@ from content.views import export_videoitems_json
 router = DefaultRouter()
 router.register(r'videos', VideoItemViewSet, basename='videoitem')
 
-def trigger_error(request):
-    division_by_zero = 1 / 0
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +26,6 @@ urlpatterns = [
     path('check-thumbnail-status/<str:video_name>/', check_thumbnail_status, name='check_thumbnail_status'),
     path('check-convertion-status/<str:video_name>/', check_convertion_status, name='check_convertion_status'),
     path('export-videoitems-json/', export_videoitems_json, name='export_videoitems_json'),
-    path('sentry-debug/', trigger_error),
     path('api/', include(router.urls)),
     path('django-rq/', include('django_rq.urls')),
 ] + staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + debug_toolbar_urls()
