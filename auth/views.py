@@ -93,8 +93,12 @@ class LoginViewSet(viewsets.ViewSet):
         
         if email == "guest@web.de" and password == "Admin123":
             user, created = CustomUser.objects.get_or_create(
-                username="guest", defaults={"email": "guest@web.de", "is_guest": True}
+                username="guest", 
+                defaults={"email": "guest@web.de", "is_guest": True}
             )
+            if created:
+                user.set_password("Admin123")
+                user.save()
             token, _ = Token.objects.get_or_create(user=user)
             return Response({
                 "message": "Guest login successful",
@@ -115,6 +119,7 @@ class LoginViewSet(viewsets.ViewSet):
             }, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
 
         
 
