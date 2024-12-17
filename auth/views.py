@@ -91,21 +91,31 @@ class LoginViewSet(viewsets.ViewSet):
         email = request.data.get('email')
         password = request.data.get('password')
         
+        if email == "guest@web.de" and password == "Admin123":
+            user, created = CustomUser.objects.get_or_create(
+                username="guest", defaults={"email": "guest@web.de", "is_guest": True}
+            )
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({
+                "message": "Guest login successful",
+                "token": token.key
+            }, status=status.HTTP_200_OK)
+
         try:
             user = CustomUser.objects.get(email=email)
         except CustomUser.DoesNotExist:
             return Response({"error": "User with this email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(username=user.username, password=password)
-
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
             return Response({
                 "message": "Login successful",
-                "token": token.key  
+                "token": token.key
             }, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
         
 
 class LogoutViewSet(viewsets.ViewSet):
