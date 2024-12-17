@@ -91,27 +91,15 @@ class LoginViewSet(viewsets.ViewSet):
         email = request.data.get('email')
         password = request.data.get('password')
         
-        # Gast-Login
         if email == "guest@web.de" and password == "Admin123":
             user = CustomUser.objects.filter(username="guest").first()
 
-            if user is None:  # Wenn der Benutzer noch nicht existiert
-                user = CustomUser(
-                    username="guest", 
-                    email="guest@web.de", 
-                    is_guest=True
-                )
-                user.set_password("Admin123")  # Passwort sicher setzen
-                user.save()
-
-            # Token erstellen oder abrufen
             token, _ = Token.objects.get_or_create(user=user)
             return Response({
                 "message": "Guest login successful",
                 "token": token.key
             }, status=status.HTTP_200_OK)
 
-        # Standard-Login-Prozess
         try:
             user = CustomUser.objects.get(email=email)
         except CustomUser.DoesNotExist:
