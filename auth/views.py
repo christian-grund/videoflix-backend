@@ -94,16 +94,23 @@ class LoginViewSet(viewsets.ViewSet):
         if email == "guest@web.de" and password == "Admin123":
             user, created = CustomUser.objects.get_or_create(
                 username="guest", 
-                defaults={"email": "guest@web.de"} #  "is_guest": True
+                defaults={"email": "guest@web.de", "is_guest": True}
             )
-            if created:
-                user.set_password("Admin123")
-                user.save()
-            token, _ = Token.objects.get_or_create(user=user)
-            return Response({
-                "message": "Guest login successful",
-                "token": token.key
-            }, status=status.HTTP_200_OK)
+            if created:  # Nur wenn der Benutzer neu erstellt wurde
+                user.set_password("Admin123")  # Passwort sicher setzen
+                user.save()  # Änderungen speichern
+            
+            # Benutzer authentifizieren
+            user = authenticate(username=user.username, password="Admin123")
+            if user:
+                token, _ = Token.objects.get_or_create(user=user)
+                return Response({
+                    "message": "Guest login successful",
+                    "token": token.key
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
 
         try:
             user = CustomUser.objects.get(email=email)
