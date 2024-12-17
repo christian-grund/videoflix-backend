@@ -99,17 +99,17 @@ class LoginViewSet(viewsets.ViewSet):
             if created:  # Nur wenn der Benutzer neu erstellt wurde
                 user.set_password("Admin123")  # Passwort sicher setzen
                 user.save()  # Änderungen speichern
-            
-            # Benutzer authentifizieren
-            user = authenticate(username=user.username, password="Admin123")
-            if user:
-                token, _ = Token.objects.get_or_create(user=user)
-                return Response({
-                    "message": "Guest login successful",
-                    "token": token.key
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+             # Überprüfen, ob das Passwort korrekt ist
+            # if not check_password(password, user.password):
+            #     return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Token erstellen oder abrufen
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({
+                "message": "Guest login successful",
+                "token": token.key
+            }, status=status.HTTP_200_OK)
 
 
         try:
