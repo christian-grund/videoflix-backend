@@ -94,7 +94,7 @@ class LoginViewSet(viewsets.ViewSet):
         if email == "guest@web.de" and password == "Admin123":
             user, created = CustomUser.objects.get_or_create(
                 username="guest", 
-                defaults={"email": "guest@web.de", "is_guest": True}
+                defaults={"email": "guest@web.de"} #  "is_guest": True
             )
             if created:
                 user.set_password("Admin123")
