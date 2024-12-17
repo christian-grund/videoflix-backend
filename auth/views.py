@@ -91,18 +91,18 @@ class LoginViewSet(viewsets.ViewSet):
         email = request.data.get('email')
         password = request.data.get('password')
         
+        # Gast-Login
         if email == "guest@web.de" and password == "Admin123":
-            user, created = CustomUser.objects.get_or_create(
-                username="guest", 
-                defaults={"email": "guest@web.de", "is_guest": True}
-            )
-            if created:  # Nur wenn der Benutzer neu erstellt wurde
-                user.set_password("Admin123")  # Passwort sicher setzen
-                user.save()  # Änderungen speichern
+            user = CustomUser.objects.filter(username="guest").first()
 
-             # Überprüfen, ob das Passwort korrekt ist
-            # if not check_password(password, user.password):
-            #     return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+            if user is None:  # Wenn der Benutzer noch nicht existiert
+                user = CustomUser(
+                    username="guest", 
+                    email="guest@web.de", 
+                    is_guest=True
+                )
+                user.set_password("Admin123")  # Passwort sicher setzen
+                user.save()
 
             # Token erstellen oder abrufen
             token, _ = Token.objects.get_or_create(user=user)
@@ -111,7 +111,7 @@ class LoginViewSet(viewsets.ViewSet):
                 "token": token.key
             }, status=status.HTTP_200_OK)
 
-
+        # Standard-Login-Prozess
         try:
             user = CustomUser.objects.get(email=email)
         except CustomUser.DoesNotExist:
@@ -126,6 +126,7 @@ class LoginViewSet(viewsets.ViewSet):
             }, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
         
